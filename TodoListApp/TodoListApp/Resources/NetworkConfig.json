@@ -1,0 +1,79 @@
+{
+  "baseURL": "http://localhost:8080/api",
+  "timeouts": {
+    "request": 30,
+    "resource": 60
+  },
+  "oauth": {
+    "github": {
+      "authorizationURL": "http://localhost:8080/oauth2/authorization/github",
+      "redirectScheme": "todolistios"
+    }
+  },
+    "endpoints": {
+      "auth": {
+        "login": "/auth/login",
+        "register": "/auth/register",
+        "logout": "/auth/logout",
+        "enablePassword": "/auth/enable-password",
+        "changePassword": "/auth/change-password",
+        "checkPasswordStrength": "/auth/check-password-strength"
+      },
+    "users": {
+      "profile": "/users/me",
+      "updateProfile": "/users/me",
+      "uploadAvatar": "/users/me/avatar",
+      "deleteAvatar": "/users/me/avatar"
+    },
+    "todos": {
+      "getAll": "/todos",
+      "getById": "/todos/{id}",
+      "create": "/todos",
+      "update": "/todos/{id}",
+      "delete": "/todos/{id}",
+      "complete": "/todos/{id}/complete",
+      "pending": "/todos/{id}/pending",
+      "inProgress": "/todos/{id}/in-progress",
+      "byStatus": "/todos/status/{status}",
+      "byPriority": "/todos/priority/{priority}",
+      "overdue": "/todos/overdue",
+      "dueSoon": "/todos/due-soon",
+      "stats": "/todos/stats"
+    },
+    "notifications": {
+      "getAll": "/notifications",
+      "markAsRead": "/notifications/{id}/read",
+      "markAllAsRead": "/notifications/read-all",
+      "delete": "/notifications/{id}"
+    }
+  },
+  "environment": {
+    "development": {
+      "baseURL": "http://localhost:8080/api",
+      "oauth": {
+        "github": {
+          "authorizationURL": "http://localhost:8080/oauth2/authorization/github",
+          "redirectScheme": "todolistios"
+        }
+      }
+    },
+    "staging": {
+      "baseURL": "https://staging-api.todolist.com/api",
+      "oauth": {
+        "github": {
+          "authorizationURL": "https://staging-api.todolist.com/oauth2/authorization/github",
+          "redirectScheme": "todolistios"
+        }
+      }
+    },
+    "production": {
+      "baseURL": "https://api.todolist.com/api",
+      "oauth": {
+        "github": {
+          "authorizationURL": "https://api.todolist.com/oauth2/authorization/github",
+          "redirectScheme": "todolistios"
+        }
+      }
+    }
+  }
+}

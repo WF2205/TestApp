@@ -1,0 +1,89 @@
+version: '3.8'
+
+services:
+  # MongoDB Database
+  mongodb:
+    image: mongo:7.0
+    container_name: todolist-mongodb
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: password123
+      MONGO_INITDB_DATABASE: todolist
+    volumes:
+      - mongodb_data:/data/db
+      - ./docker/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+    networks:
+      - todolist-network
+
+  # RabbitMQ Message Queue
+  rabbitmq:
+    image: rabbitmq:3.12-management
+    container_name: todolist-rabbitmq
+    restart: unless-stopped
+    ports:
+      - "5672:5672"    # AMQP port
+      - "15672:15672"  # Management UI port
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - todolist-network
+
+  # Spring Boot Application
+  app:
+    build: .
+    container_name: todolist-app
+    restart: unless-stopped
+    ports:
+      - "8080:8080"
+    environment:
+      # Database configuration
+      SPRING_DATA_MONGODB_HOST: mongodb
+      SPRING_DATA_MONGODB_PORT: 27017
+      SPRING_DATA_MONGODB_DATABASE: todolist
+      SPRING_DATA_MONGODB_USERNAME: admin
+      SPRING_DATA_MONGODB_PASSWORD: password123
+      SPRING_DATA_MONGODB_AUTHENTICATION_DATABASE: admin
+      
+      # RabbitMQ configuration
+      SPRING_RABBITMQ_HOST: rabbitmq
+      SPRING_RABBITMQ_PORT: 5672
+      SPRING_RABBITMQ_USERNAME: guest
+      SPRING_RABBITMQ_PASSWORD: guest
+      
+      # GitHub OAuth (you need to set these)
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-Ov23li0Ktpp1f9YEvsG6}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-your_actual_client_secret_here}
+      
+      # Server configuration
+      SERVER_PORT: 8080
+      SERVER_SERVLET_CONTEXT_PATH: /
+      
+      # Logging
+      LOGGING_LEVEL_COM_EXAMPLE_TODOLISTAPP: DEBUG
+    depends_on:
+      - mongodb
+      - rabbitmq
+    networks:
+      - todolist-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/actuator/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+
+volumes:
+  mongodb_data:
+    driver: local
+  rabbitmq_data:
+    driver: local
+
+networks:
+  todolist-network:
+    driver: bridge

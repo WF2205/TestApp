@@ -1,0 +1,58 @@
+# Docker ignore file
+# Exclude files and directories that shouldn't be copied to the Docker image
+
+# Git
+.git
+.gitignore
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Maven
+target/
+.mvn/wrapper/maven-wrapper.jar
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+*.tmp
+*.temp
+
+# Docker files
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Documentation
+README.md
+*.md
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Node modules (if any)
+node_modules/
+
+# iOS project files
+iOS_TodoList_Starter/
+
+# Test files
+src/test/
+
+# Build artifacts
+*.jar
+*.war
+*.ear
+*.class
